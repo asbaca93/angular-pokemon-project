@@ -1,24 +1,26 @@
-<div style="display: flex; margin: 10px;">
-    <label for="pokemonName">Name:</label>
+<div>
+    <label for="pokemonName">Name:&nbsp;</label>
     <input id="pokemonName" type="text" [formControl]="pokemonName">
     <button mat-button (click)="showPokemon()">search</button>
 </div>
-<div *ngIf="pokeResponse">  
-    <mat-card style="color: color;">   
+<div *ngIf="pokeResponse.name">  
+    <mat-card [ngClass]="pokeType">   
         <h1>{{pokeResponse.name}}</h1>
         <img
-        width="100"
+        width="150"
         alt="pokemon img"
         src={{pokeResponse.sprites.front_default}}
         />
         <p>id: {{pokeResponse.id}}</p>
         <p>xp: {{pokeResponse.base_experience}}</p>
         <p>weight: {{pokeResponse.weight}}</p>
-        <div style="justify-content: center;">
-            <p>types:</p>
-            <p *ngFor="let type of pokeResponse.types">{{type.type.name}}</p>
-        </div>
-        
+        <div style="justify-content: center; display: flex;">
+            <p>types:&nbsp;</p>
+            <div style="display: flex;" *ngFor="let type of pokeResponse.types; index as i">
+                <p>{{type.type.name}}</p>
+                <p *ngIf="pokeResponse.types[i + 1]">,&nbsp;</p>
+            </div>
+        </div>     
     </mat-card> 
 </div>
 

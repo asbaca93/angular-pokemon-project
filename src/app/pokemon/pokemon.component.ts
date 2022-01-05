@@ -21,27 +21,6 @@ export interface PokeResponse {
   }
 }
 
-enum typeColors {
-  normal = 'grey',
-  fire = 'red',
-  water = 'blue',
-  grass = 'green',
-  electric = 'yellow',
-  ice = 'blue',
-  fighting = 'orange',
-  poison = 'purple', 
-  ground = 'brown',
-  flying = 'black',
-  psychic = 'purple',
-  bug = 'green',
-  rock = 'grey',
-  ghost = 'black',
-  dark = 'black',
-  dragon = 'orange',
-  steel = 'grey',
-  fairy = 'pink'
-}
-
 @Component({
   selector: 'app-pokemon',
   templateUrl: './pokemon.component.html',
@@ -49,37 +28,45 @@ enum typeColors {
 })
 export class PokemonComponent implements OnInit {
   pokemonName = new FormControl('');
-  pokeResponse: PokeResponse | undefined;
-  color = 'white';
+  pokeResponse: PokeResponse;
   name: string | null = null;
+  pokeType = 'normal';
   constructor(
     private pokemonService: PokemonService,
     private route: ActivatedRoute,
     private router: Router,
-  ) { }
+  ) {
+    this.pokeResponse = {
+      name: "",
+      id: "",
+      base_experience: 0,
+      weight: 0,
+      sprites: {
+        front_default: ''
+      },
+      types: []
+    };
+   }
 
   ngOnInit(): void {
     this.name = this.route.snapshot.paramMap.get('name');
     if (this.name) {
-        this.pokemonService.getPokemon(this.name).subscribe(result => { 
-          this.pokeResponse = result;
-        });
+        this.getPokemon(this.name).subscribe();
       }
   }
 
   showPokemon() {
     this.router.navigateByUrl(`pokemon/${this.pokemonName.value}`);
-    this.getPokemon().subscribe();
+    this.getPokemon(this.pokemonName.value).subscribe();
   }
 
-  getPokemon() {
+  getPokemon(name: string) {
     let isRefreshing = true;
-    return this.pokemonService.getPokemon(this.pokemonName.value).pipe(
+    return this.pokemonService.getPokemon(name).pipe(
       filter(result => (result) ? true : false),
-      // concatMap(result => this.pokemonService.getPokemonDetails(result.id).pipe(map(result => this.pokeDetailResult = result))),
       map(result => this.pokeResponse = result),
+      tap(_ => this.pokeType = this.pokeResponse.types[0].type.name),
       tap(_ => isRefreshing = false),
-      tap(_ => this.color = typeColors['fire'])
     )
   }
 }
