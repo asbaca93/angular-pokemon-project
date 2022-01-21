@@ -1,13 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LandingPageComponent } from './landing-page/landing-page.component';
+import { PokedexComponent } from './pokedex/pokedex.component';
 import { PokemonComponent } from './pokemon/pokemon.component';
+import { WeatherComponent } from './weather/weather.component';
 
 const routes: Routes = [
-  { path: '', component: LandingPageComponent },
+  { path: '', component: WeatherComponent },
   { path: 'pokemon/:name', component: PokemonComponent },
   { path: 'pokemon', component: PokemonComponent },
-  
+  { path: 'pokedex', component: PokedexComponent }
 ];
 
 @NgModule({

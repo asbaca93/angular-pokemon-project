@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  pokeapi: 'https://pokeapi.co/api/v2'
+  pokeapi: 'https://pokeapi.co/api/v2',
+  weatherApi: 'https://localhost:5001'
 };
 
 /*

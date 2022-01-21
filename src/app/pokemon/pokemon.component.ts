@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { PokemonService } from '../pokemon.service';
 import { FormControl } from '@angular/forms';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { concatMap, filter, map, tap } from 'rxjs';
+import { Router, ActivatedRoute } from '@angular/router';
+import { filter, from, map, tap } from 'rxjs';
+import DataService from '../odata.service';
 
 export interface Types {
   type: {
@@ -11,7 +12,7 @@ export interface Types {
 }
 
 export interface PokeResponse {
-  id: string;
+  id: number;
   base_experience: number;
   name: string;
   types: Array<Types>;
@@ -32,13 +33,14 @@ export class PokemonComponent implements OnInit {
   name: string | null = null;
   pokeType = 'normal';
   constructor(
+    private dataService: DataService,
     private pokemonService: PokemonService,
     private route: ActivatedRoute,
     private router: Router,
   ) {
     this.pokeResponse = {
       name: "",
-      id: "",
+      id: 0,
       base_experience: 0,
       weight: 0,
       sprites: {
@@ -46,13 +48,13 @@ export class PokemonComponent implements OnInit {
       },
       types: []
     };
-   }
+  }
 
   ngOnInit(): void {
     this.name = this.route.snapshot.paramMap.get('name');
     if (this.name) {
-        this.getPokemon(this.name).subscribe();
-      }
+      this.getPokemon(this.name).subscribe();
+    }
   }
 
   showPokemon() {
@@ -68,5 +70,20 @@ export class PokemonComponent implements OnInit {
       tap(_ => this.pokeType = this.pokeResponse.types[0].type.name),
       tap(_ => isRefreshing = false),
     )
+  }
+
+  catchPokemon() {
+    const types = this.pokeResponse.types.map(type => {
+      return { name: type.type.name, id: 0 };
+    });
+
+    return this.dataService.PokedexPokemon.post({
+      id: this.pokeResponse.id,
+      xp: this.pokeResponse.base_experience,
+      name: this.pokeResponse.name,
+      types,
+      weight: this.pokeResponse.weight,
+      url: this.pokeResponse.sprites.front_default,
+    }).subscribe()
   }
 }

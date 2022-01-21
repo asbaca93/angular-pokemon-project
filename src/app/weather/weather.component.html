@@ -1,0 +1,11 @@
+<div *ngIf="weathers.length > 0">
+    <h1>Weather Record</h1>
+    <mat-card *ngFor="let weather of weathers;">
+        <div >
+            <p>{{weather.date}}<p>
+            <p>{{weather.tempuratureC}}</p>
+            <P>{{weather.tempuratureF}}</P>
+            <p>{{weather.summary}}</p>
+        </div>
+    </mat-card>
+</div>
