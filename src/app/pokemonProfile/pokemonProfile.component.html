@@ -1,0 +1,27 @@
+<div *ngIf="pokemon.id > 0">
+    <mat-card [ngClass]="pokemon.types[0].name">
+        <h1>{{pokemon.name}}</h1>
+        <img width="150" alt="pokemon img" src={{pokemon.url}} />
+        <p>id: {{pokemon.id}}</p>
+        <p>xp: {{pokemon.xp}}</p>
+        <p>weight: {{pokemon.weight}}</p>
+        <p>height: {{pokemon.height}}</p>
+        <p>hp: {{pokemon.hp}}</p>
+        <p>attack: {{pokemon.attack}}</p>
+        <p>defense: {{pokemon.defense}}</p>
+        <div style="justify-content: center; display: flex;">
+            <p>types:&nbsp;</p>
+            <div style="display: flex;" *ngFor="let type of pokemon.types; index as i">
+                <p>{{type.name}}</p>
+                <p *ngIf="pokemon.types[i + 1]">,&nbsp;</p>
+            </div>
+        </div>
+        <div style="justify-content: center; display: flex;">
+            <p>moves:&nbsp;</p>
+            <div style="display: flex;" *ngFor="let move of pokemon.moves; index as i">
+                <p>{{move.name}}</p>
+                <p *ngIf="pokemon.moves[i + 1]">,&nbsp;</p>
+            </div>
+        </div>
+    </mat-card>
+</div>

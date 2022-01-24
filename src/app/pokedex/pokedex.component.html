@@ -1,17 +1,24 @@
 <div>
-    <h1>Caught Pokemon</h1>
+    <h1>Caught Pokemon!</h1>
     <div>
 
 
         <div *ngIf="caughtPokemon.length > 0" style="justify-content: center; display: flex;">
             <!-- below div will loop and display all cards -->
-            <div *ngFor="let pokemon of caughtPokemon" style="padding: 10px;">
-                <mat-card>
+            <div *ngFor="let pokemon of caughtPokemon" style="padding: 10px;" (click)="onPokemonClick(pokemon.id)">
+                <mat-card [ngClass]="pokemon.types[0].name">
                     <h1>{{pokemon.name}}</h1>
                     <img width="150" alt="pokemon img" src={{pokemon.url}} />
                     <p>id: {{pokemon.id}}</p>
                     <p>xp: {{pokemon.xp}}</p>
                     <p>weight: {{pokemon.weight}}</p>
+                    <div style="justify-content: center; display: flex;">
+                        <p>types:&nbsp;</p>
+                        <div style="display: flex;" *ngFor="let type of pokemon.types; index as i">
+                            <p>{{type.name}}</p>
+                            <p *ngIf="pokemon.types[i + 1]">,&nbsp;</p>
+                        </div>
+                    </div>
                 </mat-card>
             </div>
         </div>

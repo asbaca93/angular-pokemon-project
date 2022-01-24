@@ -30,7 +30,8 @@ export class ODataStore<T> {
   }
 
   get(key: any, options?: ODataQueryOptions): Observable<T> {
-    return this._http.get<T>(this._uri + `(${key})`);
+    const queryUri = this.buildQueryUri(options);
+    return this._http.get<T>(this._uri + `(${key})` + queryUri);
   }
 
   post(entity: T): Observable<T> {

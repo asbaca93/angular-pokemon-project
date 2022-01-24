@@ -10,12 +10,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { WeatherComponent } from './weather/weather.component';
 import { PokedexComponent } from './pokedex/pokedex.component';
+import { PokemonProfileComponent } from './pokemonProfile/pokemonProfile.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PokemonComponent,
     PokedexComponent,
+    PokemonProfileComponent,
     WeatherComponent,
   ],
   imports: [

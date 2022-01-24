@@ -4,23 +4,7 @@ import { FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { filter, from, map, tap } from 'rxjs';
 import DataService from '../odata.service';
-
-export interface Types {
-  type: {
-    name: string;
-  }
-}
-
-export interface PokeResponse {
-  id: number;
-  base_experience: number;
-  name: string;
-  types: Array<Types>;
-  weight: number;
-  sprites: {
-    front_default: string;
-  }
-}
+import { PokeApiPokemon } from '../models/pokeApiPokemon.model';
 
 @Component({
   selector: 'app-pokemon',
@@ -29,7 +13,7 @@ export interface PokeResponse {
 })
 export class PokemonComponent implements OnInit {
   pokemonName = new FormControl('');
-  pokeResponse: PokeResponse;
+  pokeResponse: PokeApiPokemon;
   name: string | null = null;
   pokeType = 'normal';
   constructor(
@@ -46,7 +30,10 @@ export class PokemonComponent implements OnInit {
       sprites: {
         front_default: ''
       },
-      types: []
+      types: [],
+      height: 0,
+      abilities: [],
+      stats: [],
     };
   }
 
@@ -69,12 +56,16 @@ export class PokemonComponent implements OnInit {
       map(result => this.pokeResponse = result),
       tap(_ => this.pokeType = this.pokeResponse.types[0].type.name),
       tap(_ => isRefreshing = false),
+      tap(_ => console.log('pokeapi: ', this.pokeResponse)) 
     )
   }
 
   catchPokemon() {
     const types = this.pokeResponse.types.map(type => {
       return { name: type.type.name, id: 0 };
+    });
+    const moves = this.pokeResponse.abilities.map(ability => {
+      return { name: ability.ability.name, id: 0 };
     });
 
     return this.dataService.PokedexPokemon.post({
@@ -84,6 +75,11 @@ export class PokemonComponent implements OnInit {
       types,
       weight: this.pokeResponse.weight,
       url: this.pokeResponse.sprites.front_default,
+      moves,
+      height: this.pokeResponse.height,
+      hp: this.pokeResponse.stats.filter(s => s.stat.name === 'hp')[0].base_stat,
+      attack: this.pokeResponse.stats.filter(s => s.stat.name === 'attack')[0].base_stat,
+      defense: this.pokeResponse.stats.filter(s => s.stat.name === 'defense')[0].base_stat,
     }).subscribe()
   }
 }

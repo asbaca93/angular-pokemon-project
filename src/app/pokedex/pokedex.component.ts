@@ -3,7 +3,7 @@ import { PokedexPokemon } from '../models/pokedexPokemon.model';
 import { PokedexService } from '../pokedex.service';
 import DataService from '../odata.service';
 import { ODataListResponse, ODataQueryOptions } from '../models/odatastore';
-import { from } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-pokemon',
@@ -19,7 +19,7 @@ import { from } from 'rxjs';
     odataSingle?: PokedexPokemon = undefined;
     page: number = 1;
 
-    constructor(private pokedexService: PokedexService, private dataService: DataService) {}
+    constructor(private pokedexService: PokedexService, private dataService: DataService, private router: Router) {}
 
     ngOnInit(): void {
       this.getPokemon();
@@ -42,6 +42,9 @@ import { from } from 'rxjs';
         expand: ['types']
       };
       this.dataService.PokedexPokemon.list(getPokemonOptions).subscribe(pokemonReturned => this.caughtPokemon = pokemonReturned.value);
-      // this.pokedexService.getPokemon({ page: this.page, take: 6 }).subscribe(response => this.caughtPokemon = response);
+    }
+
+    onPokemonClick(id: number) {
+      this.router.navigateByUrl(`pokedex/${id}`);
     }
   }
